@@ -1,4 +1,4 @@
-call "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\Tools\VsDevCmd.bat"
+call "C:\Program Files (x86)\Microsoft Visual Studio\2017\Enterprise\Common7\Tools\VsDevCmd.bat"
 
 echo Swtich to x86 build env
 cd %~dp0\luajit-2.1.0b3\src

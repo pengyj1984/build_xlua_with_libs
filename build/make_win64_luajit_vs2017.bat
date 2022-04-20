@@ -1,4 +1,4 @@
-call "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\Tools\VsDevCmd.bat" -arch=amd64
+call "C:\Program Files (x86)\Microsoft Visual Studio\2017\Enterprise\Common7\Tools\VsDevCmd.bat" -arch=amd64
 
 echo Swtich to x64 build env
 cd %~dp0\luajit-2.1.0b3\src
