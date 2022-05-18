@@ -305,6 +305,8 @@ function _G.test_type()
 end
 
 function _G.test_default()
+   withstate(function()
+   protoc.reload()
    check_load [[
       enum TestDefaultColor {
          RED = 0;
@@ -369,6 +371,15 @@ function _G.test_default()
          BLUE = 2;
       }
       message TestNest{}
+      message TestNest1 {
+         TestNest nest = 1;
+      }
+      message TestNest2 {
+         TestNest1 nest = 1;
+      }
+      message TestNest3 {
+         TestNest2 nest = 1;
+      }
       message TestDefault {
          // some fields here
          int32 foo = 1;
@@ -384,6 +395,11 @@ function _G.test_default()
          TestNest nest = 17;
          repeated int32 array = 18;
       } ]]
+
+   pb.option "decode_default_message"
+   local dt = pb.decode("TestNest3", "")
+   table_eq(dt, {nest={nest={nest={}}}})
+   pb.option "no_decode_default_message"
 
    local _, _, _, _, rep = pb.field("TestDefault", "foo")
    eq(rep, "optional")
@@ -470,7 +486,7 @@ function _G.test_default()
    pb.clear "TestDefault"
    pb.clear "TestNest"
    pb.option "auto_default_values"
-   assert(pb.type ".google.protobuf.FileDescriptorSet")
+   end)
 end
 
 function _G.test_enum()
@@ -1348,6 +1364,40 @@ function _G.test_unsafe()
    pb.clear "TestType"
    eq((unsafe.use "global"), true)
    eq((unsafe.use "local"), true)
+end
+
+function _G.test_order()
+   withstate(function()
+   protoc.reload()
+   check_load [[
+      enum Type {
+         HOME = 1;
+         WORK = 2;
+      }
+      message Phone {
+         optional string name        = 1;
+         optional int64  phonenumber = 2;
+         optional Type   type        = 3;
+      }
+      message Person {
+         optional string name     = 1;
+         optional int32  age      = 2;
+         optional string address  = 3;
+         repeated Phone  contacts = 4;
+      } ]]
+   pb.option "encode_order"
+   local data = {
+      name = "ilse",
+      age  = 18,
+      contacts = {
+         { name = "alice", phonenumber = 12312341234 },
+         { name = "bob",   phonenumber = 45645674567 }
+      }
+   }
+   local b1 = pb.encode("Person", data)
+   local b2 = pb.encode("Person", data)
+   eq(b1, b2)
+   end)
 end
 
 if _VERSION == "Lua 5.1" and not _G.jit then
