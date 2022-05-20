@@ -3,3 +3,4 @@
 build64
 build_lj64
 *.pdb
+build_lj32
