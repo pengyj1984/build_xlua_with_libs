@@ -33,3 +33,7 @@ xLua 原项目 https://github.com/Tencent/xLua
 
 ## 同步 lua-protobuf
 lua-protobuf 原项目 https://github.com/starwing/lua-protobuf.git
+
+## 在Ubuntu22.04上生成 Android
+1. 需要手动安装 libncurses5，因为22.04默认的是 libncurses6. --- sudo apt install libncurses5
+2. 生成 luajit 版本时使用脚本 make_android_luajit_arm64.sh。需要安装 gcc 的 multilib 库。 sudo apt install gcc-multilib
